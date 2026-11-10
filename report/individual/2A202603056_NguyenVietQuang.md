@@ -19,56 +19,57 @@ Dẫn tới [GUIDELINE_MINI.md](../../GUIDELINE_MINI.md). Áp dụng ID `car=0`,
 
 - Số file nhãn train: 50.
 - Kết quả checker và lỗi đã xử lý: checker báo đạt cấu trúc 50/50 file; chưa ghi nhận lỗi cấu trúc.
-- Danh sách ít nhất 10 ảnh đã rà bằng mắt: chưa ghi nhận; cần tự rà và điền danh sách.
+- Danh sách ít nhất 10 ảnh đã rà bằng mắt: chưa ghi trong báo cáo; điền danh sách nếu đã rà.
 - Lỗi bỏ sót/box/class phát hiện khi rà và cách sửa: chưa ghi nhận kết quả rà bằng mắt.
 - Commit khóa nhãn ban đầu: chưa ghi nhận mã commit.
 
 ## 4. Gold QC và rework
 
-| Chỉ số | Lần đánh giá hiện tại (trước rework) | Sau sửa nếu có |
+| Chỉ số | Lần đánh giá hiện tại | Sau sửa nếu có |
 |---|---:|---:|
 | TP | 438 | Chưa chạy lại |
 | FP | 569 | Chưa chạy lại |
 | FN | 215 | Chưa chạy lại |
 | Precision | 0.4350 | Chưa chạy lại |
 | Recall | 0.6708 | Chưa chạy lại |
-| F1 | 0.5277 | Chưa chạy lại (ngưỡng ≥ 0.80) |
-| mean_iou_of_matches | 0.8493 | Chưa chạy lại (ngưỡng ≥ 0.70) |
-| passed | false | Chưa chạy lại |
+| F1 | 0.5277 | Chưa chạy lại |
+| mean_iou_of_matches | 0.8493 | Chưa chạy lại |
+| `passed` theo evaluator (ngưỡng mặc định F1 ≥ 0.80) | false | Chưa chạy lại |
 
-Dẫn tới [`outputs/annotation_evaluation.json`](../../outputs/annotation_evaluation.json) nếu file kết quả đã được lưu trong repo. Lần hiện tại chưa đạt do F1 dưới ngưỡng; mean IoU của các box ghép đạt ngưỡng. Chưa có rework được ghi nhận. Ưu tiên rà từng box trên `drive_018`, `drive_023`, `drive_028`, `drive_030`, `drive_031`, `drive_037`, `drive_045` và `drive_049`, rồi ghi quyết định sửa/giữ và lý do. Không thể suy ra nguyên nhân cụ thể chỉ từ FP/FN tổng hợp.
+Dẫn tới [`outputs/annotation_evaluation.json`](../../outputs/annotation_evaluation.json) nếu file kết quả đã được lưu trong repo. Theo ngưỡng F1 > 0.50 mà học viên cho biết được áp dụng cho bài này, F1 = 0.5277 đạt; mean IoU = 0.8493 cũng đạt ngưỡng 0.70. Script hiện báo `passed: false` vì ngưỡng F1 mặc định là 0.80. Chưa có số liệu rework sau lần đánh giá này.
 
 ## 5. Kết quả YOLO
 
-- Runtime, GPU/CPU, phiên bản Ultralytics và Torch: chưa ghi nhận.
-- Các tham số thay đổi so với notebook nếu có và lý do: chưa ghi nhận.
-- Đường dẫn best checkpoint trong phiên chạy: chưa ghi nhận.
+- Runtime, GPU/CPU, phiên bản Ultralytics và Torch: Google Colab, Tesla T4; Ultralytics 8.4.208, Python 3.13.16, Torch 2.14.1+cu130.
+- Các tham số thay đổi so với notebook nếu có và lý do: không thấy thay đổi; YOLO26n, 50 epochs, imgsz=640, batch=-1, seed=20260909.
+- Đường dẫn best checkpoint trong phiên chạy: `/content/Day2-Lab/outputs/yolo26_runs/vehicle_annotation/weights/best.pt`.
 
 | Chỉ số trên 10 ảnh eval | Giá trị |
 |---|---:|
-| Precision | Chưa ghi nhận |
-| Recall | Chưa ghi nhận |
-| mAP50 | Chưa ghi nhận |
-| mAP50–95 | Chưa ghi nhận |
+| Precision | 0.4105 |
+| Recall | 0.2303 |
+| mAP50 | 0.2723 |
+| mAP50–95 | 0.2017 |
 
-Chưa ghi nhận hai folder `assets/eval_predictions/` và `assets/yolo26_runs/` hoặc kết quả model. Sau khi train/evaluate, đặt cả hai folder cạnh báo cáo, dẫn link tương đối, điền số đo thực tế và phân tích ít nhất một ảnh cùng vật thể cụ thể.
+Notebook cho biết đã tạo `outputs/day2_colab_outputs.zip` trong phiên Colab, gồm ảnh dự đoán và log train/eval. Hai folder `assets/eval_predictions/` và `assets/yolo26_runs/` hiện chưa có trong workspace cạnh báo cáo; cần tải/giải nén ZIP và thêm hai folder này để hoàn tất minh chứng nộp bài.
 
 Trả lời bốn câu hỏi cuối notebook:
 
-1. Chưa trả lời; cần dựa trên recall theo lớp và ảnh dự đoán từ lần chạy thực tế.
-2. Nếu mAP50 cao nhưng mAP50–95 thấp, cần kiểm độ khít và tọa độ các cạnh box ở nhiều ngưỡng IoU.
-3. Chưa kết luận; cần đối chiếu lỗi phân lớp trong ảnh dự đoán với guideline và dữ kiện cụ thể.
+1. `bus` có recall thấp nhất (0.000). Notebook ghi nhận dự đoán bus ở `drive_052` và `drive_053`, nhưng không khớp được instance bus trong ground truth; cần xem ảnh prediction để mô tả lỗi cụ thể.
+2. Nếu mAP50 cao nhưng mAP50–95 thấp, cần kiểm độ khít của box và vị trí các cạnh ở các ngưỡng IoU chặt hơn.
+3. Recall theo lớp là `car` 0.638, `truck` 0.200, `bus` 0.000 và `van` 0.0833. Điều này cho thấy các lớp ít mẫu nhận diện kém hơn trong lần chạy này; cần đối chiếu ảnh dự đoán với guideline trước khi kết luận có lỗi phân lớp cụ thể.
 4. Không dùng 10 ảnh eval để train để giữ split đánh giá; trong notebook chúng được dùng làm validation để đánh giá/chọn checkpoint tốt nhất, nên không phải test độc lập.
 
 ## 6. Khó khăn và cách xử lý
 
 | Bước/thời điểm | Lỗi quan sát | Cách đã thử | Kết quả/còn thiếu |
 |---|---|---|---|
-| Gold QC | F1 = 0.5277, dưới ngưỡng yêu cầu | Đã ghi các ảnh ưu tiên rà trong guideline | Chưa rework/chạy lại evaluator |
+| Gold QC | F1 = 0.5277; vượt ngưỡng > 0.50 học viên cho biết áp dụng; script mặc định báo `passed=false` với ngưỡng 0.80 | Ghi kết quả vào báo cáo | Chưa có lần rework/evaluator sau sửa |
+| YOLO eval | Recall thấp nhất ở bus; mAP50 = 0.2723 | Đã train/evaluate trên 10 ảnh eval | Cần thêm prediction và log vào `report/individual/assets/` |
 
 ## 7. Tự đánh giá theo rubric
 
-Đã có 50 file nhãn, checker đạt cấu trúc và có một lần gold QC. Gold QC chưa đạt F1 yêu cầu; cần rework và đánh giá lại. Chưa ghi nhận self-QC bằng mắt, commit khóa nhãn ban đầu hoặc kết quả train/eval YOLO.
+Đã có 50 file nhãn, checker đạt cấu trúc, một lần gold QC và kết quả train/eval YOLO. Theo ngưỡng > 0.50 học viên cho biết áp dụng, annotation đạt; JSON vẫn ghi `passed=false` do ngưỡng mặc định trong script là 0.80. Còn thiếu danh sách ảnh self-QC bằng mắt, mã commit khóa nhãn ban đầu và hai folder minh chứng model trong assets.
 
 ## 8. Công cụ AI và tài liệu tham khảo
 
