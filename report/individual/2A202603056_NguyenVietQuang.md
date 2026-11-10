@@ -19,8 +19,9 @@ Dẫn tới [GUIDELINE_MINI.md](../../GUIDELINE_MINI.md). Áp dụng ID `car=0`,
 
 - Số file nhãn train: 50.
 - Kết quả checker và lỗi đã xử lý: checker báo đạt cấu trúc 50/50 file; chưa ghi nhận lỗi cấu trúc.
-- Danh sách ít nhất 10 ảnh đã rà bằng mắt: chưa ghi trong báo cáo; điền danh sách nếu đã rà.
-- Lỗi bỏ sót/box/class phát hiện khi rà và cách sửa: chưa ghi nhận kết quả rà bằng mắt.
+- 10 ảnh chọn để rà lại: `drive_009`, `drive_018`, `drive_023`, `drive_028`, `drive_030`, `drive_031`, `drive_037`, `drive_042`, `drive_045`, `drive_049`. Đối chiếu AI sơ bộ với gold ở IoU ≥ 0.50; học viên cần xác nhận bằng mắt trước khi coi là self-QC hoàn tất.
+- Class lệch sơ bộ (label hiện tại → gold): `drive_009`: 5 `bus→van`, 1 `car→bus`, 1 `car→van`, 1 `truck→van`, 1 `van→truck`; `drive_018`: 1 `van→truck`; `drive_023`: 3 `bus→car`; `drive_030`: 1 `bus→van`, 2 `van→truck`, 1 `van→car`; `drive_031`: 1 `van→truck`; `drive_037`: 6 `bus→car`, 1 `truck→bus`; `drive_042`: 2 `bus→van`, 1 `truck→bus`. Không thấy class lệch ở các box ghép được của `drive_028`, `drive_045`, `drive_049`.
+- Box không ghép được về vị trí với gold ở IoU ≥ 0.50 (cần mở ảnh để xác định nguyên nhân): `drive_009`: 13 student / 6 gold; `drive_018`: 8 / 0; `drive_023`: 0 / 1; `drive_028`: 12 / 0; `drive_030`: 27 / 3; `drive_031`: 20 / 0; `drive_037`: 2 / 0; `drive_042`: 4 / 0; `drive_045`: 22 / 3; `drive_049`: 22 / 0. Đây là box chưa ghép theo vị trí, không tự kết luận tất cả là nhãn thừa hay bỏ sót.
 - Commit khóa nhãn ban đầu: chưa ghi nhận mã commit.
 
 ## 4. Gold QC và rework
@@ -73,4 +74,4 @@ Trả lời bốn câu hỏi cuối notebook:
 
 ## 8. Công cụ AI và tài liệu tham khảo
 
-Đã dùng ChatGPT để hỗ trợ đọc kết quả evaluator, cập nhật guideline và soạn báo cáo; cần tự đối chiếu các nhãn với ảnh/gold và chịu trách nhiệm về quyết định sửa. Nguồn ngoài repo: chưa ghi nhận.
+Đã dùng ChatGPT để hỗ trợ đọc kết quả evaluator, đối chiếu sơ bộ 10 ảnh với gold và cập nhật báo cáo; học viên sẽ tự xem ảnh/nhãn để xác nhận class lệch, box chưa ghép và quyết định sửa. Nguồn ngoài repo: chưa ghi nhận.
